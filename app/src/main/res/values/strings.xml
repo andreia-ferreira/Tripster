@@ -5,4 +5,7 @@
         Please try again later.</string>
     <string name="error_empty_search_places">No places were found.</string>
     <string name="description_place_picture">place picture</string>
+    <string name="text_unknown_opening">Unknown</string>
+    <string name="text_open">Open</string>
+    <string name="text_closed">Closed</string>
 </resources>

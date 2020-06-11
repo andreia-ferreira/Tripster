@@ -3,13 +3,12 @@ package com.penguin.tripster.repository
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.penguin.tripster.BuildConfig
 import com.penguin.tripster.R
 import com.penguin.tripster.database.PlacesDao
 import com.penguin.tripster.model.PlaceOfInterest
 import com.penguin.tripster.model.networkModel.NearbyPlacesResponse
-import com.penguin.tripster.model.networkModel.NearbyPlacesResult
 import com.penguin.tripster.network.RetrofitHelper
+import com.penguin.tripster.utils.mapping.PlacesMapper
 import retrofit2.Response
 import java.net.UnknownHostException
 
@@ -36,15 +35,9 @@ class PlacesRepository(private val mApplication: Application,
 
                 if (listPlaces.isNotEmpty()) {
                     Log.d(TAG, "Found ${listPlaces.size} results")
+                    val mappedPlaces = PlacesMapper.mapListArtObject(listPlaces)
+                    networkList.addAll(mappedPlaces)
 
-                    for (place: NearbyPlacesResult? in listPlaces) {
-                        place?.let {
-                            //TODO mapper
-                            val imageUrl = "${BuildConfig.BASE_URL}place/photo?key=${BuildConfig.API_KEY}&maxwidth=1080&photoreference=${it.photos?.get(0)?.photoReference ?: ""}"
-                            val placeOfInterest = PlaceOfInterest(it.placeId ?: "", it.name ?: "", imageUrl)
-                            networkList.add(placeOfInterest)
-                        }
-                    }
                     dao.insertNearbyPlaces(networkList)
                     reposErrors.value = null
                 } else {

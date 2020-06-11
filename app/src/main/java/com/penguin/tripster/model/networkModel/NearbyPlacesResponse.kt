@@ -6,5 +6,5 @@ import com.google.gson.annotations.SerializedName
 class NearbyPlacesResponse: GooglePlacesDefaultResponse() {
     @SerializedName("results")
     @Expose
-    var results: List<NearbyPlacesResult?>? = null
+    var results: List<NearbyPlacesResult>? = null
 }

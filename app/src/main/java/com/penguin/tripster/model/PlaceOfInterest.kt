@@ -8,4 +8,7 @@ data class PlaceOfInterest(
     @PrimaryKey
     val placeId: String,
     val name: String,
-    val image: String)
+    val image: String,
+    val openNow: Boolean?,
+    val types: List<String>?) {
+}

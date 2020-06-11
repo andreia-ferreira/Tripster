@@ -17,6 +17,23 @@ class NearbyPlacesRecyclerViewAdapter(private val context: Context, private val 
     inner class NearbyPlacesViewHolder(private val binding: ItemNearbyPlaceBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(place: PlaceOfInterest) {
             binding.setVariable(BR.place, place)
+            binding.setVariable(BR.types, place.types?.joinToString()?.replace("_", " "))
+
+            when (place.openNow) {
+                null -> {
+                    binding.setVariable(BR.openNowText, context.getString(R.string.text_unknown_opening))
+                    binding.setVariable(BR.openNowColor, context.resources.getColor(R.color.unknownColor))
+                }
+                true -> {
+                    binding.setVariable(BR.openNowText, context.getString(R.string.text_open))
+                    binding.setVariable(BR.openNowColor, context.resources.getColor(R.color.openColor))
+                }
+                false -> {
+                    binding.setVariable(BR.openNowText, context.getString(R.string.text_closed))
+                    binding.setVariable(BR.openNowColor, context.resources.getColor(R.color.closedColor))
+                }
+            }
+
         }
     }
 

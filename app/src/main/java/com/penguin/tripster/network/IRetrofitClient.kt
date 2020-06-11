@@ -20,11 +20,6 @@ interface IRetrofitClient {
                                 @Query("key") apiKey: String,
                                 @Query("nextPageToken") token: String): Response<NearbyPlacesResponse?>
 
-    @GET("/maps/api/place/photo")
-    suspend fun getPlacePhoto(@Query("photoreference") photoReference: String,
-                                @Query("maxWidth") maxWidth: Int,
-                                @Query("key") apiKey: String)
-
     @GET("/maps/api/place/details/json")
     suspend fun getPlaceDetails(@Query("placeId") placeId: String,
                               @Query("key") apiKey: String)
