@@ -4,17 +4,16 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.library.baseAdapters.BR
 import androidx.recyclerview.widget.RecyclerView
-import com.penguin.tripster.R
-import com.penguin.tripster.databinding.ItemNearbyPlaceBinding
-import com.penguin.tripster.databinding.ItemSpotlightNearbyPlaceBinding
 import com.penguin.tripster.model.PlaceOfInterest
+import androidx.databinding.library.baseAdapters.BR
+import com.penguin.tripster.R
+import com.penguin.tripster.databinding.ItemSpotlightNearbyPlaceBinding
 
-class NearbyPlacesRecyclerViewAdapter(private val context: Context, private val listPlaces: List<PlaceOfInterest>):
-    RecyclerView.Adapter<NearbyPlacesRecyclerViewAdapter.NearbyPlacesViewHolder>() {
+class SpotlightPlacesRecyclerViewAdapter(private val context: Context, private val listPlaces: List<PlaceOfInterest>):
+    RecyclerView.Adapter<SpotlightPlacesRecyclerViewAdapter.SpotlightPlacesViewHolder>() {
 
-    inner class NearbyPlacesViewHolder(private val binding: ItemNearbyPlaceBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class SpotlightPlacesViewHolder(private val binding: ItemSpotlightNearbyPlaceBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(place: PlaceOfInterest) {
             binding.setVariable(BR.place, place)
         }
@@ -23,15 +22,15 @@ class NearbyPlacesRecyclerViewAdapter(private val context: Context, private val 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): NearbyPlacesViewHolder {
+    ): SpotlightPlacesViewHolder {
 
         val binding = DataBindingUtil.inflate(
             LayoutInflater.from(context),
-            R.layout.item_nearby_place,
+            R.layout.item_spotlight_nearby_place,
             parent,
-            false) as ItemNearbyPlaceBinding
+            false) as ItemSpotlightNearbyPlaceBinding
 
-        return NearbyPlacesViewHolder(binding)
+        return SpotlightPlacesViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
@@ -39,7 +38,7 @@ class NearbyPlacesRecyclerViewAdapter(private val context: Context, private val 
     }
 
     override fun onBindViewHolder(
-        holder: NearbyPlacesViewHolder,
+        holder: SpotlightPlacesViewHolder,
         position: Int
     ) {
         return holder.bind(listPlaces[position])

@@ -17,6 +17,7 @@ import com.penguin.tripster.R
 import com.penguin.tripster.databinding.MainFragmentBinding
 import com.penguin.tripster.model.PlaceOfInterest
 import com.penguin.tripster.ui.adapter.NearbyPlacesRecyclerViewAdapter
+import com.penguin.tripster.ui.adapter.SpotlightPlacesRecyclerViewAdapter
 
 class MainFragment : Fragment() {
 
@@ -24,6 +25,7 @@ class MainFragment : Fragment() {
     private lateinit var binding: MainFragmentBinding
     private lateinit var mContext: Context
     private val placesList = ArrayList<PlaceOfInterest>()
+    private val topPlacesList = ArrayList<PlaceOfInterest>()
 
     companion object {
         var TAG: String = MainFragment::class.java.simpleName
@@ -41,10 +43,15 @@ class MainFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.isLoading = viewModel.isLoading
 
-        val layoutManager = LinearLayoutManager(mContext)
-        layoutManager.orientation = LinearLayoutManager.VERTICAL
-        binding.layoutManager = layoutManager
+        val verticalLayoutManager = LinearLayoutManager(mContext)
+        verticalLayoutManager.orientation = LinearLayoutManager.VERTICAL
+        binding.layoutManager = verticalLayoutManager
         binding.adapter = NearbyPlacesRecyclerViewAdapter(mContext, placesList)
+
+        val horizontalLayoutManager = LinearLayoutManager(mContext)
+        horizontalLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
+        binding.layoutManagerSpotlight = horizontalLayoutManager
+        binding.adapterSpotlight = SpotlightPlacesRecyclerViewAdapter(mContext, topPlacesList)
 
         viewModel.showLoading()
         initListeners()
@@ -55,28 +62,29 @@ class MainFragment : Fragment() {
     }
 
     private fun initListeners() {
-        binding.scrollListener = object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (!recyclerView.canScrollVertically(1) && placesList.isNotEmpty()) {
-                    viewModel.showLoading()
-                    viewModel.refreshPlaces(false)
-                }
-            }
-        }
-
         binding.swipeRefreshListener = SwipeRefreshLayout.OnRefreshListener {
             viewModel.refreshPlaces(true)
         }
-
     }
 
     private fun initObservers() {
         viewModel.listDisplayPlaces.observe(viewLifecycleOwner, Observer { list ->
             if (list != null && list.isNotEmpty()) {
                 placesList.clear()
-                placesList.addAll(list)
+                topPlacesList.clear()
+
+                when(list.size) {
+                    in 0..3 -> {
+                        topPlacesList.addAll(list.subList(0, list.lastIndex))
+                    }
+                    else -> {
+                        topPlacesList.addAll(list.subList(0, 3))
+                        placesList.addAll(list.subList(3, list.lastIndex))
+                    }
+                }
+
                 binding.adapter?.notifyDataSetChanged()
+                binding.adapterSpotlight?.notifyDataSetChanged()
                 viewModel.hideLoading()
             }
         })
